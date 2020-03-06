@@ -1,0 +1,17 @@
+#flash {
+  background-color: green;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.userForm {
+  margin: auto;
+  width: 15%;
+}
+
+button:hover {
+  background-color: lightblue;
+}
