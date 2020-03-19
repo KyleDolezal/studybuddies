@@ -6,7 +6,7 @@ import csrf from "../modules/csrf"
 
 class NewUser extends React.Component {
   constructor(props){
-    super();
+    super(props);
     this.state = {
       email: '',
       password: '',
