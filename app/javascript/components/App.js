@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import NewUser from "./NewUser"
 import Header from "./Header"
+import Login from "./Login"
 
 class App extends React.Component {
   constructor(props){
@@ -18,7 +19,7 @@ class App extends React.Component {
 
   getBody(){
     if(this.props.user){
-      return(<p>Welcome</p>)
+      return(<Login loginPath={this.props.loginPath} rootPath={this.props.rootPath}/>)
     } else {
       return(<NewUser createUserPath={this.props.createUserPath} rootPath={this.props.rootPath}/>)
     }
