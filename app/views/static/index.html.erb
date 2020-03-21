@@ -1,2 +1,4 @@
 <%= javascript_pack_tag 'application' %>
-<%= react_component("App", { user: @user, createUserPath: user_registration_path, rootPath: root_url }) %>
+<%= react_component("App", { user: @user, createUserPath: user_registration_path,
+                            loginPath: new_user_session_path,
+                            rootPath: root_url }) %>
