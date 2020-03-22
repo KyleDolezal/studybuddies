@@ -20,11 +20,11 @@ afterEach(() => {
 
 it("Welcomes the user, if one is present", () => {
   act(() => {
-    render(<Header user="happy user"/>, container);
+    render(<Header useremail="happy_user@asdf.com"/>, container);
   });
 
   const userInput = container.querySelector('span');
-  expect(userInput.textContent).toBe("Welcome, happy user");
+  expect(userInput.textContent).toBe("Welcome, happy_user");
 });
 
 it("Provides a generic greeting if no user is present", () => {

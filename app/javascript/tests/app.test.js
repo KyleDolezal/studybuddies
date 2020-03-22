@@ -20,7 +20,7 @@ afterEach(() => {
 
 it("does not render login when a user is present", () => {
   act(() => {
-    render(<App user="user"/>, container);
+    render(<App user={{email: 'asdf@asdf.com', id:'1'}}/>, container);
   });
 
   const header = container.querySelector('h1');

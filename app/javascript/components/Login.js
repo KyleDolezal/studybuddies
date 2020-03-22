@@ -48,6 +48,7 @@ class Login extends React.Component {
             this.setState({flashMessage: result.errors.join(". ")});
             setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);
           } else {
+            this.props.setUserInfo(result['data']['id'], result['data']['email'])
             this.setState({flashMessage: 'Log in success'})
             setTimeout(history.push('/'), 1000);
           }
