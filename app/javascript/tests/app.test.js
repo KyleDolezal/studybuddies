@@ -2,9 +2,8 @@ import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
 import{act} from 'react-dom/test-utils';
 import TestRenderer from 'react-test-renderer';
-import NewUser from '../components/NewUser'
-
 import App from '../components/App';
+import Login from "../components/Login"
 
 let container = null;
 
@@ -19,16 +18,20 @@ afterEach(() => {
   container = null;
 });
 
-it("renders newUser when no user is present", () => {
-  const testRenderer = TestRenderer.create(<App />);
-  const testInstance = testRenderer.root;
+it("does not render login when a user is present", () => {
+  act(() => {
+    render(<App user="user"/>, container);
+  });
 
-  expect(testInstance.findByType(NewUser)).toBeTruthy();
+  const header = container.querySelector('h1');
+  expect(header.textContent).not.toBe("Login");
 });
 
-it("does not render a newUser when a user is present", () => {
-  const testRenderer = TestRenderer.create(<App user="user"/>);
-  const testInstance = testRenderer.root;
+it("renders login when no user is present", () => {
+  act(() => {
+    render(<App />, container);
+  });
 
-  expect(testInstance.findAllByType(NewUser).length).toBe(0);
+  const login = container.querySelector('h1');
+  expect(login.textContent).toBe("Login");
 });

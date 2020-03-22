@@ -3,6 +3,15 @@ import PropTypes from "prop-types"
 import NewUser from "./NewUser"
 import Header from "./Header"
 import Login from "./Login"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 class App extends React.Component {
   constructor(props){
@@ -12,16 +21,31 @@ class App extends React.Component {
     return(
       <div>
         <Header user={this.props.user}/>
-        {this.getBody()}
+        <Router>
+
+          <Switch>
+            <Route path="/login">
+              <Login {...this.props}
+                      link=<Link to={`/newuser`}>Create a user</Link> />
+            </Route>
+            <Route path="/newuser">
+              <NewUser {...this.props}
+                      link=<Link to={`/login`}>Sign in</Link> />
+            </Route>
+            <Route path="/">
+              {this.getBodyForAuthedUser()}
+            </Route>
+          </Switch>
+        </Router>
       </div>
     )
   }
 
-  getBody(){
+  getBodyForAuthedUser(){
     if(this.props.user){
-      return(<Login loginPath={this.props.loginPath} rootPath={this.props.rootPath}/>)
+      return(<h1>Welcome</h1>)
     } else {
-      return(<NewUser createUserPath={this.props.createUserPath} rootPath={this.props.rootPath}/>)
+      history.push("/login")
     }
   }
 }
