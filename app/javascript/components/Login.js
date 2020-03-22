@@ -3,6 +3,9 @@ import PropTypes from "prop-types"
 import validateUserInfo from "../modules/validateUserInfo"
 import UserInput from "./userInput"
 import csrf from "../modules/csrf"
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 class Login extends React.Component {
   constructor(props){
@@ -46,7 +49,7 @@ class Login extends React.Component {
             setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);
           } else {
             this.setState({flashMessage: 'Log in success'})
-            setTimeout(this.props.history.push(this.props.rootPath), 1000);
+            setTimeout(history.push('/'), 1000);
           }
       })
   }
@@ -69,6 +72,7 @@ class Login extends React.Component {
             eventFunction={this.updateUserInfo}
             eventName="password"/>
           <div><button onClick={() => this.submitUserInfo()}>Log in</button></div>
+          {this.props.link}
         </div>
       </React.Fragment>
     );

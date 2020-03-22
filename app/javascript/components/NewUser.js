@@ -3,6 +3,9 @@ import PropTypes from "prop-types"
 import validateUserInfo from "../modules/validateUserInfo"
 import UserInput from "./userInput"
 import csrf from "../modules/csrf"
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 
 class NewUser extends React.Component {
   constructor(props){
@@ -35,7 +38,7 @@ class NewUser extends React.Component {
       method: "POST",
       body: JSON.stringify({
           ...this.state,
-          confirm_success_url: this.props.rootPath
+          confirm_success_url: "this.props.rootPath"
       }),
       headers: {
        'Content-Type': 'application/json',
@@ -51,7 +54,7 @@ class NewUser extends React.Component {
           if (result.status == 'success') {
             this.setState({flashMessage: 'Registration success'})
 
-            setTimeout(this.props.history.push(this.props.rootPath), 1000);
+            setTimeout(history.push(this.props.rootPath), 1000);
           } else {
             this.setState({flashMessage: result.errors.full_messages.join(". ")});
             setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);
@@ -81,6 +84,7 @@ class NewUser extends React.Component {
             eventFunction={this.updateUserInfo}
             eventName="password_confirmation"/>
           <div><button onClick={() => this.submitUserInfo()}>Sign me up</button></div>
+          {this.props.link}
         </div>
       </React.Fragment>
     );
