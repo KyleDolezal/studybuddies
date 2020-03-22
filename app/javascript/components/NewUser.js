@@ -53,8 +53,8 @@ class NewUser extends React.Component {
           })
           if (result.status == 'success') {
             this.setState({flashMessage: 'Registration success'})
-
-            setTimeout(history.push(this.props.rootPath), 1000);
+            this.props.setUserInfo(result['data']['id'], result['data']['email'])
+            setTimeout(history.push('/'), 1000);
           } else {
             this.setState({flashMessage: result.errors.full_messages.join(". ")});
             setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);

@@ -39,7 +39,9 @@ it("renders email, password, and confirm password fields with a submit button", 
 
 it("posts form information to the proper endpoint", () => {
   act(() => {
-    render(<NewUser history={[]} createUserPath="mockUserPath"/>, container);
+    render(<NewUser history={[]}
+            createUserPath="mockUserPath"
+            setUserInfo={()=>{}}/>, container);
 
     validateUserInfo.mockResolvedValue(true);
   });
@@ -48,6 +50,7 @@ it("posts form information to the proper endpoint", () => {
 
   response.status = 'success';
   response.errors = {};
+  response.data = {email: 'asdf@asdf.com', id: '1'}
   response.errors.full_messages = [""];
 
   fetch.mockResponseOnce(JSON.stringify(response));
@@ -64,7 +67,9 @@ it("posts form information to the proper endpoint", () => {
 
 it("updates the state based on form values", () => {
   act(() => {
-    render(<NewUser history={[]} createUserPath="mockUserPath"/>, container);
+    render(<NewUser history={[]}
+            createUserPath="mockUserPath"
+            setUserInfo={()=>{}}/>, container);
   });
 
   const emailField           = container.querySelector('.userForm').children[1].children[1];
