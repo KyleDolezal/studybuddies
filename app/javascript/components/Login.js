@@ -2,10 +2,11 @@ import React from "react"
 import PropTypes from "prop-types"
 import validateUserInfo from "../modules/validateUserInfo"
 import UserInput from "./userInput"
-import csrf from "../modules/csrf"
 import { createBrowserHistory } from 'history';
+import fetch_with_auth_headers from '../modules/fetch_wrapper'
 
 const history = createBrowserHistory();
+let _isMounted = ''
 
 class Login extends React.Component {
   constructor(props){
@@ -16,8 +17,24 @@ class Login extends React.Component {
     };
   }
 
+  componentDidMount() {
+    _isMounted = true;
+  }
+
+  componentWillUnmount() {
+    _isMounted = false;
+  }
+
+  _safeSetStateWrapper(newState){
+    if(_isMounted){
+      this.setState({
+        ...newState
+      })
+    }
+  }
+
   updateUserInfo = (event, attribute) => {
-    this.setState({
+    this._safeSetStateWrapper({
       [attribute]: event.target.value
     })
   }
@@ -27,32 +44,27 @@ class Login extends React.Component {
       ...this.state
     };
 
-    fetch(this.props.loginPath, {
+    fetch_with_auth_headers(this.props.loginPath, {
       method: "POST",
       body: JSON.stringify({
-          ...this.state,
-          confirm_success_url: this.props.rootPath
-      }),
-      headers: {
-       'Content-Type': 'application/json',
-       'X-CSRF-Token': csrf
-      }
-    })
+        ...this.state,
+        confirm_success_url: this.props.rootPath})
+      }, '', this.props.setAuthToken)
       .then((response) => response.json())
       .then(
         (result) => {
-          this.setState({
+          this._safeSetStateWrapper({
             finishedRequest: true
           })
           if (result.errors) {
-            this.setState({flashMessage: result.errors.join(". ")});
+            this._safeSetStateWrapper({flashMessage: result.errors.join(". ")});
             setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);
           } else {
             this.props.setUserInfo(result['data']['id'], result['data']['email'])
-            this.setState({flashMessage: 'Log in success'})
+            this._safeSetStateWrapper({flashMessage: 'Log in success'})
             setTimeout(history.push('/'), 1000);
           }
-      })
+        })
   }
 
   render () {

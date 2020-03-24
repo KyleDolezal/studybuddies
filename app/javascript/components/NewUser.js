@@ -4,8 +4,10 @@ import validateUserInfo from "../modules/validateUserInfo"
 import UserInput from "./userInput"
 import csrf from "../modules/csrf"
 import { createBrowserHistory } from 'history';
+import fetch_with_auth_headers from '../modules/fetch_wrapper'
 
 const history = createBrowserHistory();
+let _isMounted = ''
 
 class NewUser extends React.Component {
   constructor(props){
@@ -18,9 +20,25 @@ class NewUser extends React.Component {
   }
 
   updateUserInfo = (event, attribute) => {
-    this.setState({
+    this._safeSetStateWrapper({
       [attribute]: event.target.value
     })
+  }
+
+  componentDidMount() {
+    _isMounted = true;
+  }
+
+  componentWillUnmount() {
+    _isMounted = false;
+  }
+
+  _safeSetStateWrapper(newState){
+    if(_isMounted){
+      this.setState({
+        ...newState
+      })
+    }
   }
 
   submitUserInfo = () => {
@@ -34,7 +52,7 @@ class NewUser extends React.Component {
       ...this.state
     };
 
-    fetch(this.props.createUserPath, {
+    fetch_with_auth_headers(this.props.createUserPath, {
       method: "POST",
       body: JSON.stringify({
           ...this.state,
@@ -44,20 +62,20 @@ class NewUser extends React.Component {
        'Content-Type': 'application/json',
        'X-CSRF-Token': csrf
       }
-    })
+    }, '', this.props.setAuthToken)
       .then((response) => response.json())
       .then(
         (result) => {
-          this.setState({
+          this._safeSetStateWrapper({
             finishedRequest: true
           })
           if (result.status == 'success') {
-            this.setState({flashMessage: 'Registration success'})
+            this._safeSetStateWrapper({flashMessage: 'Registration success'})
             this.props.setUserInfo(result['data']['id'], result['data']['email'])
             setTimeout(history.push('/'), 1000);
           } else {
-            this.setState({flashMessage: result.errors.full_messages.join(". ")});
-            setTimeout(()=>{this.setState({finishedRequest: false})}, 3000);
+            this._safeSetStateWrapper({flashMessage: result.errors.full_messages.join(". ")});
+            setTimeout(()=>{this._safeSetStateWrapper({finishedRequest: false})}, 3000);
           }
       })
   }

@@ -24,7 +24,7 @@ afterEach(() => {
 
 it("renders email, password, and confirm password fields with a submit button", () => {
   act(() => {
-    render(<NewUser />, container);
+    render(<NewUser setAuthToken={()=>{}}/>, container);
   });
 
   const userForm = container.querySelector('.userForm');
@@ -41,7 +41,8 @@ it("posts form information to the proper endpoint", () => {
   act(() => {
     render(<NewUser history={[]}
             createUserPath="mockUserPath"
-            setUserInfo={()=>{}}/>, container);
+            setUserInfo={()=>{}}
+            setAuthToken={()=>{}}/>, container);
 
     validateUserInfo.mockResolvedValue(true);
   });
