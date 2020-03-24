@@ -18,7 +18,8 @@ class App extends React.Component {
     super(props)
 
     this.state={
-      user: props.user || {email: '', id: ' '}
+      user: props.user || {email: '', id: ' '},
+      'access-token': ''
     }
   }
   render () {
@@ -30,12 +31,14 @@ class App extends React.Component {
             <Route path="/login">
               <Login {...this.props}
                       link=<Link to={`/newuser`}>Create a user</Link>
-                      setUserInfo={this.setUserInfo} />
+                      setUserInfo={this.setUserInfo}
+                      setAuthToken={this.setAuthToken} />
             </Route>
             <Route path="/newuser">
               <NewUser {...this.props}
                       link=<Link to={`/login`}>Sign in</Link>
-                      setUserInfo={this.setUserInfo} />
+                      setUserInfo={this.setUserInfo}
+                      setAuthToken={this.setAuthToken} />
             </Route>
             <Route path="*">
               {this.getBodyForAuthedUser()}
@@ -62,8 +65,12 @@ class App extends React.Component {
       user: user
     })
   }
-}
 
-// {"data":{"id":3,"email":"asdfasdf@asdf.com","provider":"email","uid":"asdfasdf@asdf.com","allow_password_change":false}}
+  setAuthToken = (token) => {
+    this.setState({
+      'access-token': token
+    })
+  }
+}
 
 export default App

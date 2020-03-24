@@ -33,7 +33,7 @@ it("renders email and password fields with a submit button", () => {
 
 it("posts form information to the proper endpoint", () => {
   act(() => {
-    render(<Login history={[]} loginPath="loginPath"/>, container);
+    render(<Login history={[]} loginPath="loginPath" setAuthToken={()=>{}}/>, container);
   });
 
   const response = {};
@@ -53,7 +53,7 @@ it("posts form information to the proper endpoint", () => {
 
 it("updates the state based on form values", () => {
   act(() => {
-    render(<Login history={[]} loginPath="loginPath"/>, container);
+    render(<Login history={[]} loginPath="loginPath" setAuthToken={()=>{}}/>, container);
   });
 
   const emailField           = container.querySelector('.userForm').children[1].children[1];
