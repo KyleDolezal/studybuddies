@@ -29,16 +29,18 @@ class App extends React.Component {
         <Router>
           <Switch>
             <Route path="/login">
-              <Login {...this.props}
-                      link=<Link to={`/newuser`}>Create a user</Link>
-                      setUserInfo={this.setUserInfo}
-                      setAuthToken={this.setAuthToken} />
+              {this.state.user['email'] ? null :
+                <Login {...this.props}
+                        link=<Link to={`/newuser`}>Create a user</Link>
+                        setUserInfo={this.setUserInfo}
+                        setAuthToken={this.setAuthToken} /> }
             </Route>
             <Route path="/newuser">
-              <NewUser {...this.props}
+              {this.state.user['email'] ? null :
+                <NewUser {...this.props}
                       link=<Link to={`/login`}>Sign in</Link>
                       setUserInfo={this.setUserInfo}
-                      setAuthToken={this.setAuthToken} />
+                      setAuthToken={this.setAuthToken} /> }
             </Route>
             <Route path="*">
               {this.getBodyForAuthedUser()}
