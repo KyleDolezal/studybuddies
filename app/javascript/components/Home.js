@@ -26,6 +26,7 @@ class Home extends React.Component {
       }, this.props.auth_token, this.props.setAuthToken)
       .then((response) => response.json())
       .then((result) => {
+        this.setState({title: ''})
         if (result.errors) {
           this.showFlash(result.errors.join(', '))
         } else {
@@ -47,7 +48,8 @@ class Home extends React.Component {
         <div id="flash" className={flashClass}><h3>{this.state.flashMessage}</h3></div>
         <UserInput headerText="Add an interest"
           inputType="text"
-          eventFunction={this.updateInterest}/>
+          eventFunction={this.updateInterest}
+          val={this.state.title}/>
         <div><button onClick={() => this.submitNewInterest()}>Submit interest</button></div>
       </React.Fragment>
     );
