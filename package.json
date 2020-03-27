@@ -33,6 +33,9 @@
     ],
     "setupFiles": [
       "./setupJest.js"
-    ]
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|sass|scss)$": "<rootDir>/config/CSSStub.js"
+    }
   }
 }
