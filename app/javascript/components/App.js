@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import NewUser from "./NewUser"
 import Header from "./Header"
+import Home from "./Home"
 import Login from "./Login"
 import {
   BrowserRouter as Router,
@@ -54,7 +55,9 @@ class App extends React.Component {
 
   getBodyForAuthedUser(){
     if(this.state.user['email'].length > 0){
-      return(<h1>{this.state.user['email']}</h1>)
+      return(<Home auth_token={this.state['access-token']}
+              setAuthToken={this.setAuthToken}
+              newInterestPath={this.props.newInterestPath}/>)
     } else {
       history.push("/login")
     }
