@@ -56,12 +56,8 @@ class NewUser extends React.Component {
       body: JSON.stringify({
           ...this.state,
           confirm_success_url: "this.props.rootPath"
-      }),
-      headers: {
-       'Content-Type': 'application/json',
-       'X-CSRF-Token': csrf
-      }
-    }, '', this.props.setAuthToken)
+        })
+      }, '', this.props.setAuthToken)
       .then((response) => response.json())
       .then(
         (result) => {

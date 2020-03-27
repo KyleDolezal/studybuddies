@@ -6,11 +6,19 @@ const fetch_with_auth_headers = (path, fetch_params, auth_token, setAuthToken) =
     headers: {
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrf,
-      'access-token': auth_token
+      'access-token': auth_token['access-token'],
+      'client': auth_token['client'],
+      'expiry': auth_token['expiry'],
+      'uid': auth_token['uid']
     }
   })
   .then((response) => {
-    setAuthToken(response.headers.get('access-token'))
+    setAuthToken({
+      'access-token': response.headers.get('access-token'),
+      'client': response.headers.get('client'),
+      'expiry': response.headers.get('expirty'),
+      'uid': response.headers.get('uid')
+    })
     return response
   })
 }
