@@ -9,7 +9,7 @@ RSpec.describe UserInterestsController, type: :controller do
     context 'when the user interest is saveable' do
       it 'saves and returns a user interest' do
         expect{post :create, params: {user_interest: {title: 'asdf'}}}.to change{ user.interests.count }.by( 1 )
-        expect(response.parsed_body['title']).to eq('asdf')
+        expect(response.parsed_body['data']['attributes']['user-id']).to eq(user.id)
       end
     end
 

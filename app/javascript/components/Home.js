@@ -22,7 +22,7 @@ class Home extends React.Component {
   submitNewInterest = () => {
     fetch_with_auth_headers(this.props.newInterestPath, {
         method: "POST",
-        body: JSON.stringify({...this.state})
+        body: JSON.stringify({user_interest: {...this.state}})
       }, this.props.auth_token, this.props.setAuthToken)
       .then((response) => response.json())
       .then((result) => {

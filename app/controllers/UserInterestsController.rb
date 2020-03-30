@@ -7,11 +7,15 @@ class UserInterestsController < ApplicationController
   end
 
   def create
-    render json: current_user.interests.create!(user_interest_params)
+    user_interest = UserInterest.create(user: current_user,
+                      interest: Interest.create!(interest_params))
+
+    render json: UserInterestSerializer.new(user_interest),
+      adapter: :json_api, include: [:user, :interest]
   end
 
   private
-  def user_interest_params
+  def interest_params
     params.require(:user_interest).permit(:title)
   end
 end
