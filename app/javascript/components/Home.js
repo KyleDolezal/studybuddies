@@ -3,13 +3,15 @@ import PropTypes from "prop-types"
 import UserInput from "./userInput"
 import fetch_with_auth_headers from '../modules/fetch_wrapper'
 import styles from "../../assets/stylesheets/Home.module.css"
+import SimpleList from './SimpleList'
 
 class Home extends React.Component {
   constructor(props){
     super(props);
     this.state={
       title:'',
-      flashMessage:''
+      flashMessage:'',
+      interests:[]
     }
   }
 
@@ -31,6 +33,10 @@ class Home extends React.Component {
           this.showFlash(result.errors.join(', '))
         } else {
           this.showFlash("Interest added")
+          const newInterest = result['included'][1];
+          let newInterests = this.state.interests.
+            concat({...newInterest});
+          this.setState({ interests: newInterests })
         }
       })
   }
@@ -51,6 +57,7 @@ class Home extends React.Component {
           eventFunction={this.updateInterest}
           val={this.state.title}/>
         <div><button onClick={() => this.submitNewInterest()}>Submit interest</button></div>
+        <SimpleList header="Interests" interests={this.state.interests} />
       </React.Fragment>
     );
   }
