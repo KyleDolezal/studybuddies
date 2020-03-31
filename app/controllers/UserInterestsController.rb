@@ -6,6 +6,10 @@ class UserInterestsController < ApplicationController
     render json: {errors: [exception.message]}, status: 422
   end
 
+  rescue_from ArgumentError do |exception|
+    render json: {errors: [title: 'You must provide a proper query']}, status: 422
+  end
+
   def create
     user_interest = UserInterest.create(user: current_user,
                       interest: Interest.create!(interest_params))
@@ -14,8 +18,22 @@ class UserInterestsController < ApplicationController
       adapter: :json_api, include: [:user, :interest]
   end
 
+  def index
+    render json: UserInterest.
+                  where("#{get_whitelisted_query[:table]} = ?", get_whitelisted_query[:value]).
+                  includes(:user, :interest),
+                  adapter: :json_api, include: [:user, :interest]
+  end
+
   private
   def interest_params
     params.require(:user_interest).permit(:title)
+  end
+
+  def get_whitelisted_query
+    query_for = params[:query]&.split("=")[0]
+    value     = params[:query]&.split("=")[1]
+    raise ArgumentError unless ['user_id', 'interest_id'].include?(query_for)
+    {table: query_for, value: value}
   end
 end
