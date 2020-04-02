@@ -57,7 +57,8 @@ class App extends React.Component {
     if(this.state.user['email'].length > 0){
       return(<Home auth_token={this.state['access-token']}
               setAuthToken={this.setAuthToken}
-              newInterestPath={this.props.newInterestPath}/>)
+              interestsPath={this.props.interestsPath}
+              user_id={this.state.user['id']}/>)
     } else {
       history.push("/login")
     }

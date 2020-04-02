@@ -21,7 +21,7 @@ afterEach(() => {
 it("renders the appropriate text, based on props", () => {
   act(() => {
     render(<SimpleList
-              interests={[{id: 1, attributes: {title: 'title'}}]}
+              interests={[{title: 'title', id: 1}]}
               header="header"/>, container);
   });
 

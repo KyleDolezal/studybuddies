@@ -6,9 +6,9 @@ import { mount } from "enzyme";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 configure({ adapter: new Adapter() });
-
 import Home from '../components/Home'
 import SimpleList from '../components/SimpleList'
+import * as fetch_with_auth_headers from "../modules/fetch_wrapper"
 
 let container = null;
 
@@ -25,7 +25,8 @@ afterEach(() => {
 
 it("posts form information to the proper endpoint", () => {
   act(() => {
-    render(<Home auth_token="token" setAuthToken={()=>{}} newInterestPath="/path"/>, container);
+    fetch.mockResponseOnce(JSON.stringify({included: []}));
+    render(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1"/>, container);
   });
 
   const response = {};
@@ -40,21 +41,29 @@ it("posts form information to the proper endpoint", () => {
   fetch.enableMocks();
   fireEvent.click(button, { button: 1 });
 
-  expect(fetch.mock.calls.length).toEqual(1);
+  expect(fetch.mock.calls.length).toEqual(2);
 
-  expect(fetch.mock.calls[0][0]).toEqual('/path');
-  expect(fetch.mock.calls[0][1]['method']).toEqual('POST');
-  expect(fetch.mock.calls[0][1]['body']).toEqual("{\"user_interest\":{\"title\":\"asdf\",\"flashMessage\":\"\",\"interests\":[]}}");
+  expect(fetch.mock.calls[1][0]).toEqual('/path');
+  expect(fetch.mock.calls[1][1]['method']).toEqual('POST');
+  expect(fetch.mock.calls[1][1]['body']).toEqual("{\"user_interest\":{\"title\":\"asdf\",\"flashMessage\":\"\",\"interests\":[]}}");
 });
 
 it("has interests", () => {
-  act(() => {
-    render(<Home auth_token="token" setAuthToken={()=>{}} newInterestPath="/path"/>, container);
-  });
-  const wrapper = mount(<Home auth_token="token" setAuthToken={()=>{}} newInterestPath="/path"/>);
+  fetch.mockResponseOnce(JSON.stringify({included: []}));
+  const wrapper = mount(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path"/>);
   expect(wrapper.html().search("title")).toEqual(-1)
-  wrapper.setState({ interests: [{attributes: {title: "title"}, id: 1}]});
+  wrapper.setState({ interests: [{title: "title", id: 1}]});
   expect(wrapper.containsMatchingElement(<SimpleList/>)).toEqual(true);
   expect(wrapper.isEmptyRender()).toEqual(false);
   expect(wrapper.html().search("title") > 0).toEqual(true)
+});
+
+it("grabs the interest info for the user", () => {
+  act(() => {
+    fetch.mockResponseOnce(JSON.stringify({included: [{"id": "1", "attributes": {"type": "interest", "title": "title"}}]}));
+    render(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1"/>, container);
+  });
+
+  expect(fetch.mock.calls[0][0]).toEqual('/path/user_id=1');
+  expect(fetch.mock.calls[0][1]['method']).toEqual('GET');
 });
