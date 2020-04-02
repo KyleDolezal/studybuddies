@@ -5,8 +5,4 @@ RSpec.describe Interest, :type => :model do
     it { should have_and_belong_to_many(:users) }
     it { should have_many(:user_interests) }
   end
-
-  context 'validations' do
-    it { should validate_uniqueness_of(:title) }
-  end
 end
