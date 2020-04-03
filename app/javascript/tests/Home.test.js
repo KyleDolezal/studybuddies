@@ -2,13 +2,15 @@ import React from "react";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from 'react-dom/test-utils';
 import {fireEvent} from '@testing-library/react';
-import { mount } from "enzyme";
+import { mount, shallow } from "enzyme";
 import { configure } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 configure({ adapter: new Adapter() });
 import Home from '../components/Home'
 import SimpleList from '../components/SimpleList'
-import * as fetch_with_auth_headers from "../modules/fetch_wrapper"
+import * as fetch_with_auth_headers from '../modules/fetch_wrapper'
+import * as parseUserInterests from '../modules/parse_user_interests'
+import JestMockPromise from "jest-mock-promise";
 
 let container = null;
 
@@ -66,4 +68,27 @@ it("grabs the interest info for the user", () => {
 
   expect(fetch.mock.calls[0][0]).toEqual('/path/user_id=1');
   expect(fetch.mock.calls[0][1]['method']).toEqual('GET');
+});
+
+it("parses interests to display them to the user", () => {
+  const interestClass = new class{
+    json = ()=>{
+              return({})
+            }
+    }()
+  const interest_data = [{id: "1", "title": "title"}]
+
+  fetch_with_auth_headers.default = jest.fn(()=>{return new JestMockPromise((res, rej)=>{res(interestClass)})})
+  let wrapper = null
+
+  const parseSpy = jest.fn(()=>{return interest_data})
+  parseUserInterests.default = parseSpy
+
+  const setStateSpy = jest.fn()
+  Home.prototype.setState = setStateSpy
+
+  fetch.mockResponseOnce(JSON.stringify({included: [{"id": "1", "type": "interests", "attributes": {"title": "title"}}]}));
+  wrapper = shallow(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1" />);
+
+  expect(setStateSpy).toHaveBeenCalledWith({"interests": [{"id": "1","title": "title"}]})
 });
