@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2020_03_25_163620) do
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["title"], name: "index_interests_on_title", unique: true
   end
 
   create_table "user_interests", force: :cascade do |t|
