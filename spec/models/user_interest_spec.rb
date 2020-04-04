@@ -8,6 +8,7 @@ RSpec.describe UserInterest, :type => :model do
 
 
   context 'validations' do
-    it { should validate_uniqueness_of(:user_id).scoped_to(:interest_id) }
+    it { should validate_uniqueness_of(:user_id).scoped_to(:interest_id).
+      with_message('has already created an interest with this title') }
   end
 end

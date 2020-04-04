@@ -11,8 +11,14 @@ class UserInterestsController < ApplicationController
   end
 
   def create
-    user_interest = UserInterest.create(user: current_user,
-                      interest: Interest.create!(interest_params))
+    begin
+      interest = Interest.create!(interest_params)
+    rescue ActiveRecord::RecordNotUnique
+      interest = Interest.find_by(interest_params)
+    end
+
+    user_interest = UserInterest.create!(user: current_user,
+                      interest: interest)
 
     render json: UserInterestSerializer.new(user_interest),
       adapter: :json_api, include: [:user, :interest]
