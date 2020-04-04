@@ -48,7 +48,7 @@ RSpec.describe UserInterestsController, type: :controller do
       end
     end
 
-    context 'when the is not whitelisted' do
+    context 'when the query is not whitelisted' do
       it 'returns 422' do
         get :index, params: {query: "not whitelisted"}
         expect(response.status).to eq(422)

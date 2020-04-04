@@ -26,7 +26,7 @@ class UserInterestsController < ApplicationController
 
   def index
     render json: UserInterest.
-                  where("#{get_whitelisted_query[:table]} = ?", get_whitelisted_query[:value]).
+                  where("#{get_whitelisted_query[:table]} IN (?)", get_whitelisted_query[:value]).
                   includes(:user, :interest),
                   adapter: :json_api, include: [:user, :interest]
   end
@@ -39,7 +39,8 @@ class UserInterestsController < ApplicationController
   def get_whitelisted_query
     query_for = params[:query]&.split("=")[0]
     value     = params[:query]&.split("=")[1]
+      arrayVal  = (value || '').split(',')
     raise ArgumentError unless ['user_id', 'interest_id'].include?(query_for)
-    {table: query_for, value: value}
+    {table: query_for, value: arrayVal}
   end
 end
