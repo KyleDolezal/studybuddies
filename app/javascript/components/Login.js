@@ -73,7 +73,7 @@ class Login extends React.Component {
 
     return (
       <React.Fragment>
-        <div id="flash" className={flashClass}><h3>{this.state.flashMessage}</h3></div>
+        <div id="flash" bg="primary" variant="dark" className={flashClass + " jumbotron"}><h3>{this.state.flashMessage}</h3></div>
         <div id="signUp" className={loginClass + " userForm"}>
           <h1>Login</h1>
           <UserInput headerText="Email"

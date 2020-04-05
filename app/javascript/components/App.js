@@ -27,28 +27,30 @@ class App extends React.Component {
     return(
       <div>
         <Header useremail={this.state.user['email']}/>
-        <Router>
-          <Switch>
-            <Route path="/login">
-              {this.state.user['email'] ? null :
-                <Login {...this.props}
-                        link=<Link to={`/newuser`}>Create a user</Link>
+        <div className="container d-flex justify-content-center">
+          <Router>
+            <Switch>
+              <Route path="/login">
+                {this.state.user['email'] ? null :
+                  <Login {...this.props}
+                          link=<Link to={`/newuser`}>Create a user</Link>
+                          setUserInfo={this.setUserInfo}
+                          setAuthToken={this.setAuthToken} /> }
+              </Route>
+              <Route path="/newuser">
+                {this.state.user['email'] ? null :
+                  <NewUser {...this.props}
+                        link=<Link to={`/login`}>Sign in</Link>
                         setUserInfo={this.setUserInfo}
                         setAuthToken={this.setAuthToken} /> }
-            </Route>
-            <Route path="/newuser">
-              {this.state.user['email'] ? null :
-                <NewUser {...this.props}
-                      link=<Link to={`/login`}>Sign in</Link>
-                      setUserInfo={this.setUserInfo}
-                      setAuthToken={this.setAuthToken} /> }
-            </Route>
-            <Route path="*">
-              {this.getBodyForAuthedUser()}
-            </Route>
-          </Switch>
-        </Router>
-        {this.getBodyForAuthedUser()}
+              </Route>
+              <Route path="*">
+                {this.getBodyForAuthedUser()}
+              </Route>
+            </Switch>
+          </Router>
+          {this.getBodyForAuthedUser()}
+        </div>
       </div>
     )
   }

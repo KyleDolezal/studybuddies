@@ -104,7 +104,7 @@ class Home extends React.Component {
     const flashClass = this.state.showFlash ? '' : "hidden";
 
     return (
-      <React.Fragment>
+      <div className="justify-content-center">
         <div id="flash" className={flashClass}><h3>{this.state.flashMessage}</h3></div>
         <UserInput headerText="Add an interest"
           inputType="text"
@@ -125,7 +125,7 @@ class Home extends React.Component {
           })}
         </ul>
 
-      </React.Fragment>
+      </div>
     );
   }
 }
