@@ -9,7 +9,7 @@ const SimpleList = (props) => {
           {props.interests.map((interest) => {
             return(
               <li key={interest['id']}
-                    className="interestItem">{interest['title']}</li>
+                    className="interestItem">{interest[props.keyName]}</li>
             )
           })}
         </ul>

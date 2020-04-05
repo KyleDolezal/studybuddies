@@ -22,7 +22,7 @@ it("renders the appropriate text, based on props", () => {
   act(() => {
     render(<SimpleList
               interests={[{title: 'title', id: 1}]}
-              header="header"/>, container);
+              header="header" keyName="title"/>, container);
   });
 
   const header = container.querySelector('h3');

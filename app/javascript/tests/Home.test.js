@@ -11,6 +11,7 @@ import SimpleList from '../components/SimpleList'
 import * as fetch_with_auth_headers from '../modules/fetch_wrapper'
 import * as parseUserInterests from '../modules/parse_user_interests'
 import JestMockPromise from "jest-mock-promise";
+import fetchMock from 'jest-fetch-mock'
 
 let container = null;
 
@@ -27,7 +28,7 @@ afterEach(() => {
 
 it("posts form information to the proper endpoint", () => {
   act(() => {
-    fetch.mockResponseOnce(JSON.stringify({included: []}));
+    fetch.mockResponse(JSON.stringify({included: []}));
     render(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1"/>, container);
   });
 
@@ -47,7 +48,7 @@ it("posts form information to the proper endpoint", () => {
 
   expect(fetch.mock.calls[1][0]).toEqual('/path');
   expect(fetch.mock.calls[1][1]['method']).toEqual('POST');
-  expect(fetch.mock.calls[1][1]['body']).toEqual("{\"user_interest\":{\"title\":\"asdf\",\"flashMessage\":\"\",\"interests\":[]}}");
+  expect(fetch.mock.calls[1][1]['body']).toEqual("{\"user_interest\":{\"title\":\"asdf\",\"flashMessage\":\"\",\"interests\":[],\"users\":[]}}");
 });
 
 it("has interests", () => {
@@ -73,10 +74,10 @@ it("grabs the interest info for the user", () => {
 it("parses interests to display them to the user", () => {
   const interestClass = new class{
     json = ()=>{
-              return({})
+              return({data: []})
             }
     }()
-  const interest_data = [{id: "1", "title": "title"}]
+  const interest_data = []
 
   fetch_with_auth_headers.default = jest.fn(()=>{return new JestMockPromise((res, rej)=>{res(interestClass)})})
   let wrapper = null
@@ -84,11 +85,22 @@ it("parses interests to display them to the user", () => {
   const parseSpy = jest.fn(()=>{return interest_data})
   parseUserInterests.default = parseSpy
 
+  fetch.mockResponse(JSON.stringify({data: [], included: [{"id": "1", "type": "interests", "attributes": {"title": "title"}}]}));
+  wrapper = shallow(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1" />);
+
+  expect(parseSpy).toHaveBeenCalled()
+});
+
+it("gets both users and interests for the state", async () => {
   const setStateSpy = jest.fn()
   Home.prototype.setState = setStateSpy
 
-  fetch.mockResponseOnce(JSON.stringify({included: [{"id": "1", "type": "interests", "attributes": {"title": "title"}}]}));
-  wrapper = shallow(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1" />);
+  await act(async () => {
+    fetch.mockResponseOnce(JSON.stringify({data: [], included: []}));
+    render(<Home auth_token="token" setAuthToken={()=>{}} interestsPath="/path" user_id="1"/>, container);
 
-  expect(setStateSpy).toHaveBeenCalledWith({"interests": [{"id": "1","title": "title"}]})
+    await expect(setStateSpy).toHaveBeenCalledWith({interests: []})
+    await expect(setStateSpy).toHaveBeenCalledWith({users: []})
+  });
+
 });

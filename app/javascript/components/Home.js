@@ -12,7 +12,8 @@ class Home extends React.Component {
     this.state={
       title:'',
       flashMessage:'',
-      interests:[]
+      interests:[],
+      users:[]
     }
   }
 
@@ -22,6 +23,37 @@ class Home extends React.Component {
     })
   }
 
+  getUsers = () => {
+    const interestIds = this.state.interests.map((interest)=>{
+      return interest['id']
+    })
+    const interestQuery="interest_id=" + interestIds
+    fetch_with_auth_headers(this.props.interestsPath + "/" + interestQuery, {
+      method: "GET" }, this.props.auth_token, this.props.setAuthToken)
+      .then((response) => {
+        return(response.json())
+      })
+      .then((result) => {
+        const users = parseUserInterests(result['included'], 'users', 'email').map((user)=>{
+          return({...user,
+          interests: result['data'].filter((user_interest)=>{
+              return(user_interest['attributes']['user-id'] == user["id"])
+            }).map((user_interest_for_user)=>{
+              return(
+                this.state.interests.find((interest)=>{
+                  return(interest['id']==user_interest_for_user['attributes']['interest-id'])
+                })
+              )
+            })
+          })
+        })
+
+        this.setState({
+          users: users
+        })
+      })
+    }
+
   componentDidMount(){
     const query="user_id=" + this.props.user_id
     fetch_with_auth_headers(this.props.interestsPath + "/" + query, {
@@ -30,9 +62,13 @@ class Home extends React.Component {
         return(response.json())
       })
       .then((result) => {
+        const interests = parseUserInterests(result['included'], 'interests', 'title')
         this.setState({
-          interests: parseUserInterests(result['included'], 'interests', 'title')
+          interests: interests
         })
+        return interests
+      }).then((result) => {
+        this.getUsers(result)
       })
   }
 
@@ -54,6 +90,8 @@ class Home extends React.Component {
             concat({...newInterest});
           this.setState({ interests: newInterests })
         }
+      }).then((result)=>{
+        this.getUsers()
       })
   }
 
@@ -73,7 +111,20 @@ class Home extends React.Component {
           eventFunction={this.updateInterest}
           val={this.state.title}/>
         <div><button onClick={() => this.submitNewInterest()}>Submit interest</button></div>
-        <SimpleList header="Interests" interests={this.state.interests} />
+        <SimpleList header="Interests" interests={this.state.interests} keyName='title' />
+        <h3>Users matching your interests</h3>
+        <ul>
+          {this.state.users.filter((user)=>{return(user.id != this.props.user_id)}).map((user)=>{
+            return(
+              <div>
+                <li id={user['id']}>
+                  <SimpleList header={user.email} interests={user.interests} keyName='title'/>
+                </li>
+              </div>
+            )
+          })}
+        </ul>
+
       </React.Fragment>
     );
   }
