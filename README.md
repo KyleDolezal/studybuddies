@@ -1,24 +1,7 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This app has a Rails backend and a React frontend. The app is designed to allow users to find other users whose study interests overlap with their own.
 
-Things you may want to cover:
+To run the app locally, start the Rails sever via `rails s`. Navigate to `localhost:3000` in your browser.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+To access the deployed version of the app, navigate to http://studybuddiesapp.herokuapp.com/.
