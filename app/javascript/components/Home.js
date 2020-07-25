@@ -102,29 +102,39 @@ class Home extends React.Component {
 
   render () {
     const flashClass = this.state.showFlash ? '' : "hidden";
+    const userMatches = this.state.showFlash ? "hidden" : '';
 
     return (
       <div className="justify-content-center">
         <div id="flash" className={flashClass}><h3>{this.state.flashMessage}</h3></div>
-        <UserInput headerText="Add an interest"
-          inputType="text"
-          eventFunction={this.updateInterest}
-          val={this.state.title}/>
-        <div><button onClick={() => this.submitNewInterest()}>Submit interest</button></div>
-        <SimpleList header="Interests" interests={this.state.interests} keyName='title' />
-        <h3>Users matching your interests</h3>
-        <ul>
-          {this.state.users.filter((user)=>{return(user.id != this.props.user_id)}).map((user)=>{
-            return(
-              <div>
-                <li id={user['id']}>
-                  <SimpleList header={user.email} interests={user.interests} keyName='title'/>
-                </li>
-              </div>
-            )
-          })}
-        </ul>
-
+        <div className="row justify-content-center">
+          <div className="col">
+            <UserInput headerText="Add an interest"
+              inputType="text"
+              eventFunction={this.updateInterest}
+              val={this.state.title}/>
+            <button onClick={() => this.submitNewInterest()}>Submit interest</button>
+          </div>
+        </div>
+        <div className="row justify-content-center">
+          <SimpleList header="Interests" interests={this.state.interests} keyName='title' />
+        </div>
+        <div className={"row justify-content-center " + userMatches}>
+          <div className="col">
+            <h3>Users matching your interests</h3>
+            <ul>
+              {this.state.users.filter((user)=>{return(user.id != this.props.user_id)}).map((user)=>{
+                return(
+                  <div>
+                    <li id={user['id']}>
+                      <SimpleList header={user.email} interests={user.interests} keyName='title'/>
+                    </li>
+                  </div>
+                )
+              })}
+            </ul>
+          </div>
+        </div>
       </div>
     );
   }

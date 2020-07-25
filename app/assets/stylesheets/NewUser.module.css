@@ -7,11 +7,6 @@
   display: none;
 }
 
-.userForm {
-  margin: auto;
-  width: 15%;
-}
-
 button:hover {
   background-color: lightblue;
 }

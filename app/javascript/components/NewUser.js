@@ -83,21 +83,31 @@ class NewUser extends React.Component {
       <React.Fragment>
         <div id="flash" className={flashClass}><h3>{this.state.flashMessage}</h3></div>
         <div id="signUp" className={signUpClass + " userForm"}>
-          <h1>New user</h1>
-          <UserInput headerText="Email"
-            inputType="text"
-            eventFunction={this.updateUserInfo}
-            eventName="email"/>
-          <UserInput headerText="Password"
-            inputType="password"
-            eventFunction={this.updateUserInfo}
-            eventName="password"/>
-          <UserInput headerText="Confirm password"
-            inputType="password"
-            eventFunction={this.updateUserInfo}
-            eventName="password_confirmation"/>
+          <div className="row justify-content-center">
+            <h1>New user</h1>
+          </div>
+          <div className="row justify-content-center">
+            <UserInput headerText="Email"
+              inputType="text"
+              eventFunction={this.updateUserInfo}
+              eventName="email"/>
+          </div>
+          <div className="row justify-content-center">
+            <UserInput headerText="Password"
+              inputType="password"
+              eventFunction={this.updateUserInfo}
+              eventName="password"/>
+          </div>
+          <div className="row justify-content-center">
+            <UserInput headerText="Confirmation"
+              inputType="password"
+              eventFunction={this.updateUserInfo}
+              eventName="password_confirmation"/>
+          </div>
+
           <div><button onClick={() => this.submitUserInfo()}>Sign me up</button></div>
           {this.props.link}
+
         </div>
       </React.Fragment>
     );
