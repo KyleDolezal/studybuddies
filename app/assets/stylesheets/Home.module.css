@@ -6,3 +6,11 @@
 .hidden {
   display: none;
 }
+
+.row.hidden {
+  display: none;
+}
+
+body {
+  text-align: center;
+}

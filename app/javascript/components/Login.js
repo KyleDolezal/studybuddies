@@ -75,15 +75,21 @@ class Login extends React.Component {
       <React.Fragment>
         <div id="flash" bg="primary" variant="dark" className={flashClass + " jumbotron"}><h3>{this.state.flashMessage}</h3></div>
         <div id="signUp" className={loginClass + " userForm"}>
-          <h1>Login</h1>
-          <UserInput headerText="Email"
-            inputType="text"
-            eventFunction={this.updateUserInfo}
-            eventName="email"/>
-          <UserInput headerText="Password"
-            inputType="password"
-            eventFunction={this.updateUserInfo}
-            eventName="password"/>
+          <div className="row justify-content-center">
+            <h1>Login</h1>
+          </div>
+          <div className="row justify-content-center">
+            <UserInput headerText="Email"
+              inputType="text"
+              eventFunction={this.updateUserInfo}
+              eventName="email"/>
+          </div>
+          <div className="row justify-content-center">
+            <UserInput headerText="Password"
+              inputType="password"
+              eventFunction={this.updateUserInfo}
+              eventName="password"/>
+          </div>
           <div><button onClick={() => this.submitUserInfo()}>Log in</button></div>
           {this.props.link}
         </div>

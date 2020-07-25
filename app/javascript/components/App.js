@@ -26,30 +26,38 @@ class App extends React.Component {
   render () {
     return(
       <div>
-        <Header useremail={this.state.user['email']}/>
         <div className="container d-flex justify-content-center">
-          <Router>
-            <Switch>
-              <Route path="/login">
-                {this.state.user['email'] ? null :
-                  <Login {...this.props}
-                          link=<Link to={`/newuser`}>Create a user</Link>
-                          setUserInfo={this.setUserInfo}
-                          setAuthToken={this.setAuthToken} /> }
-              </Route>
-              <Route path="/newuser">
-                {this.state.user['email'] ? null :
-                  <NewUser {...this.props}
-                        link=<Link to={`/login`}>Sign in</Link>
-                        setUserInfo={this.setUserInfo}
-                        setAuthToken={this.setAuthToken} /> }
-              </Route>
-              <Route path="*">
-                {this.getBodyForAuthedUser()}
-              </Route>
-            </Switch>
-          </Router>
-          {this.getBodyForAuthedUser()}
+          <div className="col">
+            <div className="row justify-content-center">
+              <Header useremail={this.state.user['email']}/>
+            </div>
+            <div className="row justify-content-md-center">
+              <Router>
+                <Switch>
+                  <Route path="/login">
+                    {this.state.user['email'] ? null :
+                      <Login {...this.props}
+                              link=<Link to={`/newuser`}>Create a user</Link>
+                              setUserInfo={this.setUserInfo}
+                              setAuthToken={this.setAuthToken}
+                              className="row"/> }
+                  </Route>
+                  <Route path="/newuser">
+                    {this.state.user['email'] ? null :
+                      <NewUser {...this.props}
+                            link=<Link to={`/login`}>Sign in</Link>
+                            setUserInfo={this.setUserInfo}
+                            setAuthToken={this.setAuthToken}
+                            className="row" /> }
+                  </Route>
+                  <Route path="*">
+                    {this.getBodyForAuthedUser()}
+                  </Route>
+                </Switch>
+              </Router>
+              {this.getBodyForAuthedUser()}
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -57,10 +65,12 @@ class App extends React.Component {
 
   getBodyForAuthedUser(){
     if(this.state.user['email'].length > 0){
-      return(<Home auth_token={this.state['access-token']}
-              setAuthToken={this.setAuthToken}
-              interestsPath={this.props.interestsPath}
-              user_id={this.state.user['id']}/>)
+      return(<div>
+              <Home auth_token={this.state['access-token']}
+                setAuthToken={this.setAuthToken}
+                interestsPath={this.props.interestsPath}
+                user_id={this.state.user['id']}/>
+              </div>)
     } else {
       history.push("/login")
     }
