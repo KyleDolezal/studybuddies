@@ -16,7 +16,7 @@ const fetch_with_auth_headers = (path, fetch_params, auth_token, setAuthToken) =
     setAuthToken({
       'access-token': response.headers.get('access-token'),
       'client': response.headers.get('client'),
-      'expiry': response.headers.get('expirty'),
+      'expiry': response.headers.get('expiry'),
       'uid': response.headers.get('uid')
     })
     return response
