@@ -30,11 +30,8 @@ it("renders email, password, and confirm password fields with a submit button", 
   const userForm = container.querySelector('.userForm');
   expect(userForm.children[0].textContent).toBe("New user");
   expect(userForm.children[1].children[0].textContent).toBe("Email");
-  expect(userForm.children[1].children[1].type).toBe("text");
   expect(userForm.children[2].children[0].textContent).toBe("Password");
-  expect(userForm.children[2].children[1].type).toBe("password");
-  expect(userForm.children[3].children[0].textContent).toBe("Confirm password");
-  expect(userForm.children[3].children[1].type).toBe("password");
+  expect(userForm.children[3].children[0].textContent).toBe("Confirmation");
 });
 
 it("posts form information to the proper endpoint", () => {
@@ -73,9 +70,11 @@ it("updates the state based on form values", () => {
             setUserInfo={()=>{}}/>, container);
   });
 
-  const emailField           = container.querySelector('.userForm').children[1].children[1];
-  const passwordField        = container.querySelector('.userForm').children[2].children[1];
-  const confirmPasswordField = container.querySelector('.userForm').children[3].children[1];
+  const emailField           = container.querySelector("input[type='text']");
+  const passwordField        = container.querySelector("input[type='password']");
+  const confirmPasswordField = container.querySelector('.userForm').children[3].children[0].children[0].children[1];
+
+  console.log(confirmPasswordField.textContent);
 
   const setStateSpy = jest.spyOn(NewUser.prototype, 'setState');
 

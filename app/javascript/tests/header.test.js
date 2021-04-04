@@ -23,7 +23,7 @@ it("Welcomes the user, if one is present", () => {
     render(<Header useremail="happy_user@asdf.com"/>, container);
   });
 
-  const userInput = container.querySelector('span');
+  const userInput = container.querySelector('h1');
   expect(userInput.textContent).toBe("Welcome, happy_user");
 });
 
@@ -32,6 +32,6 @@ it("Provides a generic greeting if no user is present", () => {
     render(<Header />, container);
   });
 
-  const userInput = container.querySelector('span');
+  const userInput = container.querySelector('h1');
   expect(userInput.textContent).toBe("Welcome");
 });

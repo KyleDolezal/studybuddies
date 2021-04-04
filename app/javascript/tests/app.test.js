@@ -23,8 +23,8 @@ it("does not render login when a user is present", () => {
     render(<App user={{email: 'asdf@asdf.com', id:'1'}}/>, container);
   });
 
-  const header = container.querySelector('p');
-  expect(header.textContent).not.toBe(header);
+  const header = container.querySelector('h1');
+  expect(header.textContent).not.toContain('Login');
 });
 
 it("renders login when no user is present", () => {
@@ -32,7 +32,7 @@ it("renders login when no user is present", () => {
     render(<App />, container);
   });
 
-  const login = container.querySelector('h1');
+  const login = container.querySelectorAll("h1")[1];
   expect(login.textContent).toBe("Login");
 });
 
