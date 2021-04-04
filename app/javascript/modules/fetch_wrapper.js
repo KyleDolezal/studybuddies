@@ -13,12 +13,16 @@ const fetch_with_auth_headers = (path, fetch_params, auth_token, setAuthToken) =
     }
   })
   .then((response) => {
-    setAuthToken({
-      'access-token': response.headers.get('access-token'),
-      'client': response.headers.get('client'),
-      'expiry': response.headers.get('expiry'),
-      'uid': response.headers.get('uid')
-    })
+    const accessToken = response.headers.get('access-token')
+
+    if(accessToken && accessToken.length > 1) {
+      setAuthToken({
+        'access-token': response.headers.get('access-token'),
+        'client': response.headers.get('client'),
+        'expiry': response.headers.get('expiry'),
+        'uid': response.headers.get('uid')
+      })
+    }
     return response
   })
 }

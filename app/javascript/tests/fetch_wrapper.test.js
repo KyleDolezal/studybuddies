@@ -18,8 +18,6 @@ it("calls fetch with proper params", () => {
   }
   const setAuthToken= () => {}
 
-
-
   fetch_with_auth_headers(path, object, auth_token, setAuthToken)
 
   expect(fetch.mock.calls.length).toEqual(1);
@@ -28,10 +26,23 @@ it("calls fetch with proper params", () => {
   expect(fetch.mock.calls[0][1]['headers']['access-token']).toEqual('auth_token_1');
 })
 
-it("calls the callback function with the proper params", () => {
-  const auth_token="auth_token_1"
-  const setAuthToken = jest.fn().mockImplementation((token)=>{})
+it("calls the callback function with the proper params when a token is present", async () => {
+  fetch.mockResponse(() => new Promise((success, failure) => {success({headers: {'access-token': 'TOKEN_PRESENT'}})}))
+  const setAuthTokenCalled = jest.fn().mockImplementation(()=>{})
+  await fetch_with_auth_headers('/', {}, "auth_token_1", setAuthTokenCalled)
+  expect(setAuthTokenCalled).toHaveBeenCalledTimes(1)
 
-  return(fetch_with_auth_headers('/', {}, auth_token, setAuthToken))
-  expect(setAuthToken).toHaveBeenCalledWith(auth_token)
+  fetch.mockResponse(() => new Promise((success, failure) => {success({headers: {'access-token': ''}})}))
+  const setAuthTokenNeverCalled = jest.fn().mockImplementation(()=>{})
+  await fetch_with_auth_headers('/', {}, "auth_token_1", setAuthTokenNeverCalled)
+  expect(setAuthTokenNeverCalled).toHaveBeenCalledTimes(0)
+})
+
+it("does not set the auth token if a new token is not present", () => {
+  fetch.mockResponseOnce(new Promise(()=>{}));
+  const setAuthToken = jest.fn().mockImplementation((token)=>{})
+  fetch.enableMocks();
+
+  fetch_with_auth_headers('/', {}, "_", setAuthToken)
+  expect(setAuthToken).toHaveBeenCalledTimes(0)
 })
